@@ -213,6 +213,12 @@ public class ErrorUtils {
 
         @NotNull
         @Override
+        public Set<Name> getClassifierNames() {
+            return emptySet();
+        }
+
+        @NotNull
+        @Override
         public Collection<DeclarationDescriptor> getContributedDescriptors(
                 @NotNull DescriptorKindFilter kindFilter, @NotNull Function1<? super Name, Boolean> nameFilter
         ) {
@@ -281,6 +287,10 @@ public class ErrorUtils {
         @NotNull
         @Override
         public Set<Name> getVariableNames() {
+            throw new IllegalStateException();
+        }
+
+        public Set<Name> getClassifierNames() {
             throw new IllegalStateException();
         }
 
