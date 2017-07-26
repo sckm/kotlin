@@ -232,6 +232,8 @@ private class LexicalScopeWrapper(val delegate: LexicalScope, val newImportingSc
         }
     }
 
+    override fun definitelyDoesNotContainName(name: Name) = delegate.definitelyDoesNotContainName(name)
+
     override fun toString() = kind.toString()
 }
 

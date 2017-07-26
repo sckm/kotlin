@@ -191,6 +191,8 @@ class LazyImportResolver(
     fun getImportScope(directive: KtImportDirective): ImportingScope {
         return importedScopesProvider(directive) ?: ImportingScope.Empty
     }
+
+    fun definitelyDoesNotContainName(name: Name) = indexedImports.importsForName(name).isEmpty()
 }
 
 class LazyImportScope(
@@ -269,4 +271,6 @@ class LazyImportScope(
         p.popIndent()
         p.println("}")
     }
+
+    override fun definitelyDoesNotContainName(name: Name) = importResolver.definitelyDoesNotContainName(name)
 }
