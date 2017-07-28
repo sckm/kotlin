@@ -45,7 +45,9 @@ class SubpackagesImportingScope(
     override fun getContributedDescriptors(kindFilter: DescriptorKindFilter, nameFilter: (Name) -> Boolean): Collection<DeclarationDescriptor> =
             emptyList()
 
-    //TODO: kept old behavior, but it seems very strange (super call seems more applicable)
     override fun getContributedDescriptors(kindFilter: DescriptorKindFilter, nameFilter: (Name) -> Boolean, changeNamesForAliased: Boolean): Collection<DeclarationDescriptor>
             = emptyList()
+
+    override fun definitelyDoesNotContainName(name: Name) = true
+    override fun computeImportedNames() = emptySet<Name>()
 }
