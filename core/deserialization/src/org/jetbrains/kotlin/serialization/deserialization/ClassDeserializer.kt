@@ -55,7 +55,7 @@ class ClassDeserializer(private val components: DeserializationComponents) {
         }
         else {
             val fragments = components.packageFragmentProvider.getPackageFragments(classId.packageFqName)
-            val fragment = fragments.firstOrNull { it is DeserializedPackageFragment && it.hasTopLevelClass(classId.shortClassName) }
+            val fragment = fragments.firstOrNull { it !is DeserializedPackageFragment || it.hasTopLevelClass(classId.shortClassName) }
                            ?: return null
 
             components.createContext(
