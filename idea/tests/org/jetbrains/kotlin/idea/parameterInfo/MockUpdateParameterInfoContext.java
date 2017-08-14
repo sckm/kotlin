@@ -87,6 +87,11 @@ public class MockUpdateParameterInfoContext implements UpdateParameterInfoContex
     }
 
     @Override
+    public boolean isInnermostContext() {
+        return false;
+    }
+
+    @Override
     public Project getProject() {
         return null;
     }
