@@ -16,6 +16,17 @@
 
 package org.jetbrains.kotlin.codegen
 
+import org.jetbrains.kotlin.codegen.StackValue.*
+import org.jetbrains.kotlin.codegen.state.KotlinTypeMapper
+import org.jetbrains.kotlin.descriptors.ClassDescriptor
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
+import org.jetbrains.kotlin.incremental.components.NoLookupLocation
+import org.jetbrains.kotlin.load.java.descriptors.NullDefaultValue
+import org.jetbrains.kotlin.load.java.descriptors.StringDefaultValue
+import org.jetbrains.kotlin.load.java.descriptors.getDefaultValueFromAnnotation
+import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.resolve.DescriptorUtils
+import org.jetbrains.kotlin.utils.DFS
 import org.jetbrains.org.objectweb.asm.Type
 import org.jetbrains.org.objectweb.asm.commons.InstructionAdapter
 
@@ -68,3 +79,41 @@ open class OperationStackValue(resultType: Type, val lambda: (v: InstructionAdap
 }
 
 class FunctionCallStackValue(resultType: Type, lambda: (v: InstructionAdapter) -> Unit) : OperationStackValue(resultType, lambda)
+
+fun findJavaDefaultArgumentValue(descriptor: ValueParameterDescriptor, type: Type, typeMapper: KotlinTypeMapper): StackValue {
+    val descriptorWithDefaultValue = DFS.dfs(
+            listOf(descriptor),
+            { it.overriddenDescriptors.map(ValueParameterDescriptor::getOriginal) },
+            object : DFS.AbstractNodeHandler<ValueParameterDescriptor, ValueParameterDescriptor?>() {
+                var result: ValueParameterDescriptor? = null
+
+                override fun beforeChildren(current: ValueParameterDescriptor?): Boolean {
+                    if (current?.declaresDefaultValue() == true) {
+                        result = current
+                        return false
+                    }
+
+                    return true
+                }
+
+                override fun result(): ValueParameterDescriptor? = result
+            }
+    ) ?: error("Should be at least one descriptor with default value: " + descriptor)
+
+    val defaultValue = descriptorWithDefaultValue.getDefaultValueFromAnnotation()
+    if (defaultValue is NullDefaultValue) {
+        return constant(null, type)
+    }
+
+    val classDescriptorForParameterType = descriptor.type.constructor.declarationDescriptor
+    if (DescriptorUtils.isEnumClass(classDescriptorForParameterType)) {
+        val value = Name.identifier((defaultValue as StringDefaultValue).value)
+
+        val enumDescriptor = (classDescriptorForParameterType as ClassDescriptor)
+                .unsubstitutedInnerClassesScope
+                .getContributedClassifier(value, NoLookupLocation.FROM_BACKEND) as ClassDescriptor
+
+        return enumEntry(enumDescriptor, typeMapper)
+    }
+    return coercion(constantFromString((defaultValue as StringDefaultValue).value, type), type)
+}
