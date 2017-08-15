@@ -90,7 +90,7 @@ object LabelResolver {
 
         if (parent is KtValueArgument) {
             // f ({}) or f(p = {}) or f (fun () {})
-            val argList = parent.parent ?: return null
+            val argList = parent.parent
             val call = argList.parent
             if (call is KtCallExpression) {
                 return call

@@ -154,11 +154,10 @@ class KotlinChangeSignatureTest : KotlinLightCodeInsightFixtureTestCase() {
         catch (e: RuntimeException) {
             if ((e.message ?: "").contains("Cannot modify file")) return
 
-            val message = when {
-                e is BaseRefactoringProcessor.ConflictsInTestsException -> StringUtil.join(e.messages.sorted(), "\n")
-                e is CommonRefactoringUtil.RefactoringErrorHintException -> e.message
-                e is RuntimeException && e.message!!.startsWith("Refactoring cannot be performed") -> e.message
-                else -> throw e
+            val message = when (e) {
+                is BaseRefactoringProcessor.ConflictsInTestsException -> StringUtil.join(e.messages.sorted(), "\n")
+                is CommonRefactoringUtil.RefactoringErrorHintException -> e.message
+                else -> e.message
             }
             val conflictsFile = File(testDataPath + getTestName(false) + "Messages.txt")
             UsefulTestCase.assertSameLinesWithFile(conflictsFile.absolutePath, message)
