@@ -202,8 +202,20 @@ public abstract class StackValue {
                 return constant(Short.valueOf(value), type);
             case Type.INT:
                 return constant(Integer.valueOf(value), type);
-            case Type.LONG:
-                return constant(Long.valueOf(value), type);
+            case Type.LONG: {
+                int radix = 10;
+                if (value.startsWith("0x") || value.startsWith("0X")) {
+                    radix = 16;
+                    value = value.substring(2);
+                }
+
+                if (value.startsWith("0b") || value.startsWith("0B")) {
+                    radix = 2;
+                    value = value.substring(2);
+                }
+
+                return constant(Long.valueOf(value, radix), type);
+            }
             case Type.FLOAT:
                 return constant(Float.valueOf(value), type);
             case Type.DOUBLE:

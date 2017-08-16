@@ -401,24 +401,32 @@ class SignatureEnhancement(private val annotationTypeQualifierResolver: Annotati
     private fun KotlinType.checkLexicalCastFrom(value: String): Boolean {
         val typeDescriptor = constructor.declarationDescriptor
 
-        val parseResult: Any? = when {
-            KotlinBuiltIns.isBooleanOrNullableBoolean(this) -> value.toBoolean()
-            KotlinBuiltIns.isCharOrNullableChar(this) -> value.singleOrNull()
-            KotlinBuiltIns.isByteOrNullableByte(this) -> value.toByteOrNull()
-            KotlinBuiltIns.isShortOrNullableShort(this) -> value.toShortOrNull()
-            KotlinBuiltIns.isIntOrNullableInt(this) -> value.toIntOrNull()
-            KotlinBuiltIns.isLongOrNullableLong(this) -> value.toLongOrNull()
-            KotlinBuiltIns.isFloatOrNullableFloat(this) -> value.toFloatOrNull()
-            KotlinBuiltIns.isDoubleOrNullableDouble(this) -> value.toDoubleOrNull()
-            KotlinBuiltIns.isStringOrNullableString(this) -> {}
-            typeDescriptor is ClassDescriptor && typeDescriptor.kind == ClassKind.ENUM_CLASS -> {
-                val descriptor = typeDescriptor.unsubstitutedInnerClassesScope.getContributedClassifier(
-                        Name.identifier(value),
-                        NoLookupLocation.FROM_BACKEND
-                )
-                if (descriptor is ClassDescriptor && descriptor.kind == ClassKind.ENUM_ENTRY) true else null
+        val parseResult: Any? = try {
+            when {
+                KotlinBuiltIns.isBooleanOrNullableBoolean(this) -> value.toBoolean()
+                KotlinBuiltIns.isCharOrNullableChar(this) -> value.singleOrNull()
+                KotlinBuiltIns.isByteOrNullableByte(this) -> value.toByteOrNull()
+                KotlinBuiltIns.isShortOrNullableShort(this) -> value.toShortOrNull()
+                KotlinBuiltIns.isIntOrNullableInt(this) -> value.toIntOrNull()
+                KotlinBuiltIns.isLongOrNullableLong(this) -> when {
+                        value.startsWith("0x") || value.startsWith("0X") -> value.substring(2).toLongOrNull(16)
+                        value.startsWith("0b") || value.startsWith("0B") -> value.substring(2).toLongOrNull(2)
+                        else -> value.toLongOrNull()
+                    }
+                KotlinBuiltIns.isFloatOrNullableFloat(this) -> value.toFloatOrNull()
+                KotlinBuiltIns.isDoubleOrNullableDouble(this) -> value.toDoubleOrNull()
+                KotlinBuiltIns.isStringOrNullableString(this) -> {}
+                typeDescriptor is ClassDescriptor && typeDescriptor.kind == ClassKind.ENUM_CLASS -> {
+                    val descriptor = typeDescriptor.unsubstitutedInnerClassesScope.getContributedClassifier(
+                            Name.identifier(value),
+                            NoLookupLocation.FROM_BACKEND
+                    )
+                    if (descriptor is ClassDescriptor && descriptor.kind == ClassKind.ENUM_ENTRY) true else null
+                }
+                else -> null
             }
-            else -> null
+        } catch (e: IllegalArgumentException) {
+            null
         }
 
         return parseResult != null
