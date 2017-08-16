@@ -17648,6 +17648,12 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
             doTest(fileName);
         }
 
+        @TestMetadata("defaultLongLiteral.kt")
+        public void testDefaultLongLiteral() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/signatureAnnotations/defaultLongLiteral.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("defaultMultipleParams.kt")
         public void testDefaultMultipleParams() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/signatureAnnotations/defaultMultipleParams.kt");
