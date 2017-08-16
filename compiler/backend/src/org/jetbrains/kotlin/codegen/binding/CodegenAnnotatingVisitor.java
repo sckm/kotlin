@@ -38,6 +38,7 @@ import org.jetbrains.kotlin.descriptors.annotations.Annotations;
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor;
 import org.jetbrains.kotlin.fileClasses.FileClasses;
 import org.jetbrains.kotlin.fileClasses.JvmFileClassesProvider;
+import org.jetbrains.kotlin.load.java.JvmAbi;
 import org.jetbrains.kotlin.load.java.sam.SamConstructorDescriptor;
 import org.jetbrains.kotlin.load.kotlin.TypeMappingConfiguration;
 import org.jetbrains.kotlin.name.ClassId;
@@ -440,6 +441,9 @@ class CodegenAnnotatingVisitor extends KtVisitorVoid {
             // The first "real" containing class (not a synthetic class for lambda) is the owner of the delegated property metadata
             if (!(descriptor instanceof SyntheticClassDescriptorForLambda)) {
                 ClassId classId = DescriptorUtilsKt.getClassId(descriptor);
+                if (classId != null && DescriptorUtils.isInterface(descriptor)) {
+                    classId = classId.createNestedClassId(Name.identifier(JvmAbi.DEFAULT_IMPLS_CLASS_NAME));
+                }
                 return classId != null
                        ? AsmUtil.asmTypeByClassId(classId)
                        : CodegenBinding.getAsmType(bindingContext, descriptor);
