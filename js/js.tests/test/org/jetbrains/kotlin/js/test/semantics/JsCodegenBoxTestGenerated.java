@@ -21608,6 +21608,18 @@ public class JsCodegenBoxTestGenerated extends AbstractJsCodegenBoxTest {
             throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive for that.");
         }
 
+        @TestMetadata("defaultNullableBoxTypes.kt")
+        public void testDefaultNullableBoxTypes() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/signatureAnnotations/defaultNullableBoxTypes.kt");
+            try {
+                doTest(fileName);
+            }
+            catch (Throwable ignore) {
+                return;
+            }
+            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive for that.");
+        }
+
         @TestMetadata("defaultOverrides.kt")
         public void testDefaultOverrides() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/signatureAnnotations/defaultOverrides.kt");

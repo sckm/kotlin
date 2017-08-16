@@ -17660,6 +17660,12 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             doTest(fileName);
         }
 
+        @TestMetadata("defaultNullableBoxTypes.kt")
+        public void testDefaultNullableBoxTypes() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/signatureAnnotations/defaultNullableBoxTypes.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("defaultOverrides.kt")
         public void testDefaultOverrides() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/signatureAnnotations/defaultOverrides.kt");
