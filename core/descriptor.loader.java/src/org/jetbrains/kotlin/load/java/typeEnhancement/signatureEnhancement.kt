@@ -402,15 +402,15 @@ class SignatureEnhancement(private val annotationTypeQualifierResolver: Annotati
         val typeDescriptor = constructor.declarationDescriptor
 
         val parseResult: Any? = when {
-            KotlinBuiltIns.isBoolean(this) -> value.toBoolean()
-            KotlinBuiltIns.isChar(this) -> value.singleOrNull()
-            KotlinBuiltIns.isByte(this) -> value.toByteOrNull()
-            KotlinBuiltIns.isShort(this) -> value.toShortOrNull()
-            KotlinBuiltIns.isInt(this) -> value.toIntOrNull()
-            KotlinBuiltIns.isLong(this) -> value.toLongOrNull()
-            KotlinBuiltIns.isFloat(this) -> value.toFloatOrNull()
-            KotlinBuiltIns.isDouble(this) -> value.toDoubleOrNull()
-            KotlinBuiltIns.isString(this) -> {}
+            KotlinBuiltIns.isBooleanOrNullableBoolean(this) -> value.toBoolean()
+            KotlinBuiltIns.isCharOrNullableChar(this) -> value.singleOrNull()
+            KotlinBuiltIns.isByteOrNullableByte(this) -> value.toByteOrNull()
+            KotlinBuiltIns.isShortOrNullableShort(this) -> value.toShortOrNull()
+            KotlinBuiltIns.isIntOrNullableInt(this) -> value.toIntOrNull()
+            KotlinBuiltIns.isLongOrNullableLong(this) -> value.toLongOrNull()
+            KotlinBuiltIns.isFloatOrNullableFloat(this) -> value.toFloatOrNull()
+            KotlinBuiltIns.isDoubleOrNullableDouble(this) -> value.toDoubleOrNull()
+            KotlinBuiltIns.isStringOrNullableString(this) -> {}
             typeDescriptor is ClassDescriptor && typeDescriptor.kind == ClassKind.ENUM_CLASS -> {
                 val descriptor = typeDescriptor.unsubstitutedInnerClassesScope.getContributedClassifier(
                         Name.identifier(value),
