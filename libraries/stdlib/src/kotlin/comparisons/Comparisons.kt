@@ -205,6 +205,8 @@ public infix fun <T> Comparator<T>.thenDescending(comparator: Comparator<in T>):
 /**
  * Extends the given [comparator] of non-nullable values to a comparator of nullable values
  * considering `null` value less than any other value.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleNullsFirstWithComparator
  */
 public fun <T: Any> nullsFirst(comparator: Comparator<in T>): Comparator<T?> =
         Comparator { a, b ->
@@ -219,6 +221,8 @@ public fun <T: Any> nullsFirst(comparator: Comparator<in T>): Comparator<T?> =
 /**
  * Provides a comparator of nullable [Comparable] values
  * considering `null` value less than any other value.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleNullsFirst
  */
 @kotlin.internal.InlineOnly
 public inline fun <T: Comparable<T>> nullsFirst(): Comparator<T?> = nullsFirst(naturalOrder())
@@ -226,6 +230,8 @@ public inline fun <T: Comparable<T>> nullsFirst(): Comparator<T?> = nullsFirst(n
 /**
  * Extends the given [comparator] of non-nullable values to a comparator of nullable values
  * considering `null` value greater than any other value.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleNullsLastWithComparator
  */
 public fun <T: Any> nullsLast(comparator: Comparator<in T>): Comparator<T?> =
         Comparator { a, b ->
@@ -240,6 +246,8 @@ public fun <T: Any> nullsLast(comparator: Comparator<in T>): Comparator<T?> =
 /**
  * Provides a comparator of nullable [Comparable] values
  * considering `null` value greater than any other value.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleNullsLast
  */
 @kotlin.internal.InlineOnly
 public inline fun <T: Comparable<T>> nullsLast(): Comparator<T?> = nullsLast(naturalOrder())
