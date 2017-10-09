@@ -20,6 +20,41 @@ import samples.*
 import kotlin.test.*
 
 class ComparisonsTest {
+    @Sample
+    fun compareValuesByWithSingleSelector() {
+        val list = listOf("aa", "b", "bb", "a")
+
+        val sorted = list.sortedWith(Comparator { a, b ->
+            compareValuesBy(a, b) { it.length }
+        })
+
+        assertEquals(listOf("b", "a", "aa", "bb"), sorted)
+    }
+
+    @Sample
+    fun compareValuesByWithSelectors() {
+        val list = listOf("aa", "b", "bb", "a")
+
+        val sorted = list.sortedWith(Comparator { a, b ->
+            val lengthSelector = { s: String -> s.length }
+            val sourceSelector = { s: String -> s }
+            compareValuesBy(a, b, lengthSelector, sourceSelector)
+        })
+
+        assertEquals(listOf("a", "b", "aa", "bb"), sorted)
+    }
+
+    @Sample
+    fun compareValuesByWithComparator() {
+        val list = listOf(1, 20, 2, 100)
+
+        val sorted = list.sortedWith(Comparator { a, b ->
+            compareValuesBy(a, b, naturalOrder(), { v -> v.toString() })
+        })
+
+        assertEquals(listOf(1, 100, 2, 20), sorted)
+    }
+
 
     @Sample
     fun sampleNullsFirst() {

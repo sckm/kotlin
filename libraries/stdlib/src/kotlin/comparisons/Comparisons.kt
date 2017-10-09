@@ -23,6 +23,8 @@ package kotlin.comparisons
  * The functions are called sequentially, receive the given values [a] and [b] and return [Comparable]
  * objects. As soon as the [Comparable] instances returned by a function for [a] and [b] values do not
  * compare as equal, the result of that comparison is returned.
+ *
+ * @sample samples.comparisons.ComparisonsTest.compareValuesByWithSelectors
  */
 public fun <T> compareValuesBy(a: T, b: T, vararg selectors: (T) -> Comparable<*>?): Int {
     require(selectors.size > 0)
@@ -43,6 +45,8 @@ private fun <T> compareValuesByImpl(a: T, b: T, selectors: Array<out (T)->Compar
  * Compares two values using the specified [selector] function to calculate the result of the comparison.
  * The function is applied to the given values [a] and [b] and return [Comparable] objects.
  * The result of comparison of these [Comparable] instances is returned.
+ *
+ * @sample samples.comparisons.ComparisonsTest.compareValuesByWithSingleSelector
  */
 @kotlin.internal.InlineOnly
 public inline fun <T> compareValuesBy(a: T, b: T, selector: (T) -> Comparable<*>?): Int {
@@ -53,6 +57,8 @@ public inline fun <T> compareValuesBy(a: T, b: T, selector: (T) -> Comparable<*>
  * Compares two values using the specified [selector] function to calculate the result of the comparison.
  * The function is applied to the given values [a] and [b] and return objects of type K which are then being
  * compared with the given [comparator].
+ *
+ * @sample samples.comparisons.ComparisonsTest.compareValuesByWithComparator
  */
 @kotlin.internal.InlineOnly
 public inline fun <T, K> compareValuesBy(a: T, b: T, comparator: Comparator<in K>, selector: (T) -> K): Int {
