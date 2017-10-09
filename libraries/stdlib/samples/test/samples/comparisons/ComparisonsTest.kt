@@ -117,6 +117,78 @@ class ComparisonsTest {
     }
 
     @Sample
+    fun sampleThenBy() {
+        val list = listOf("aa", "b", "bb", "a")
+
+        val comparator = compareBy<String> { it.length }
+                .thenBy { it }
+
+        val sorted = list.sortedWith(comparator)
+
+        assertEquals(listOf("a", "b", "aa", "bb"), sorted)
+    }
+
+    @Sample
+    fun sampleThenByWithComparator() {
+        val list = listOf("aa", "b", "bb", "a")
+
+        val comparator = compareBy<String> { it.length }
+                .thenBy(reverseOrder()) { it }
+
+        val sorted = list.sortedWith(comparator)
+
+        assertEquals(listOf("b", "a", "bb", "aa"), sorted)
+    }
+
+    @Sample
+    fun sampleThenByDescending() {
+        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
+
+        val sorted = map.entries.sortedWith(
+                compareBy<Map.Entry<String, Int>> { it.value }
+                        .thenByDescending { it.key })
+                .map { it.key }
+
+        assertEquals(listOf("d", "c", "a", "b"), sorted)
+    }
+
+    @Sample
+    fun sampleThenByDescendingWithComparator() {
+        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
+
+        val sorted = map.entries.sortedWith(
+                compareBy<Map.Entry<String, Int>> { it.value }
+                        .thenByDescending(naturalOrder()) { it.key })
+                .map { it.key }
+
+        assertEquals(listOf("d", "c", "a", "b"), sorted)
+    }
+
+    @Sample
+    fun sampleThen() {
+        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
+
+        val sorted = map.entries.sortedWith(
+                compareBy<Map.Entry<String, Int>> { it.value }
+                        .then(compareBy { it.key }))
+                .map { it.key }
+
+        assertEquals(listOf("d", "a", "c", "b"), sorted)
+    }
+
+    @Sample
+    fun sampleThenDescending() {
+        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
+
+        val sorted = map.entries.sortedWith(
+                compareBy<Map.Entry<String, Int>> { it.value }
+                        .thenDescending(compareBy { it.key }))
+                .map { it.key }
+
+        assertEquals(listOf("d", "c", "a", "b"), sorted)
+    }
+
+    @Sample
     fun sampleNullsFirst() {
         val list = listOf(4, null, -1, 1)
 

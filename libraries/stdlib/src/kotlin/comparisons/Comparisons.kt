@@ -147,6 +147,8 @@ public inline fun <T, K> compareByDescending(comparator: Comparator<in K>, cross
 /**
  * Creates a comparator comparing values after the primary comparator defined them equal. It uses
  * the function to transform value to a [Comparable] instance for comparison.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleThenBy
  */
 @kotlin.internal.InlineOnly
 public inline fun <T> Comparator<T>.thenBy(crossinline selector: (T) -> Comparable<*>?): Comparator<T> =
@@ -158,6 +160,8 @@ public inline fun <T> Comparator<T>.thenBy(crossinline selector: (T) -> Comparab
 /**
  * Creates a comparator comparing values after the primary comparator defined them equal. It uses
  * the [selector] function to transform values and then compares them with the given [comparator].
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleThenByWithComparator
  */
 @kotlin.internal.InlineOnly
 public inline fun <T, K> Comparator<T>.thenBy(comparator: Comparator<in K>, crossinline selector: (T) -> K): Comparator<T> =
@@ -169,6 +173,8 @@ public inline fun <T, K> Comparator<T>.thenBy(comparator: Comparator<in K>, cros
 /**
  * Creates a descending comparator using the primary comparator and
  * the function to transform value to a [Comparable] instance for comparison.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleThenByDescending
  */
 @kotlin.internal.InlineOnly
 public inline fun <T> Comparator<T>.thenByDescending(crossinline selector: (T) -> Comparable<*>?): Comparator<T> =
@@ -180,6 +186,8 @@ public inline fun <T> Comparator<T>.thenByDescending(crossinline selector: (T) -
 /**
  * Creates a descending comparator comparing values after the primary comparator defined them equal. It uses
  * the [selector] function to transform values and then compares them with the given [comparator].
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleThenByDescendingWithComparator
  */
 @kotlin.internal.InlineOnly
 public inline fun <T, K> Comparator<T>.thenByDescending(comparator: Comparator<in K>, crossinline selector: (T) -> K): Comparator<T> =
@@ -202,6 +210,8 @@ public inline fun <T> Comparator<T>.thenComparator(crossinline comparison: (a: T
 /**
  * Combines this comparator and the given [comparator] such that the latter is applied only
  * when the former considered values equal.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleThen
  */
 public infix fun <T> Comparator<T>.then(comparator: Comparator<in T>): Comparator<T> =
         Comparator { a, b ->
@@ -212,6 +222,8 @@ public infix fun <T> Comparator<T>.then(comparator: Comparator<in T>): Comparato
 /**
  * Combines this comparator and the given [comparator] such that the latter is applied only
  * when the former considered values equal.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleThenDescending
  */
 public infix fun <T> Comparator<T>.thenDescending(comparator: Comparator<in T>): Comparator<T> =
         Comparator<T> { a, b ->
