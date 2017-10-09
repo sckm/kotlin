@@ -77,6 +77,8 @@ public inline fun <T, K> compareValuesBy(a: T, b: T, comparator: Comparator<in K
 
 /**
  * Compares two nullable [Comparable] values. Null is considered less than any value.
+ *
+ * @sample samples.comparisons.ComparisonsTest.sampleCompareValues
  */
 public fun <T : Comparable<*>> compareValues(a: T?, b: T?): Int {
     if (a === b) return 0

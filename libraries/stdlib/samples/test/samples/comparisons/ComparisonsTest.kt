@@ -56,6 +56,17 @@ class ComparisonsTest {
     }
 
     @Sample
+    fun sampleCompareValues() {
+        val list = listOf(4, null, 1, -2, 3)
+
+        val sorted = list.sortedWith(
+                Comparator { a, b -> compareValues(a, b) }
+        )
+
+        assertEquals(listOf(null, -2, 1, 3, 4), sorted)
+    }
+
+    @Sample
     fun compareByWithSingleSelector() {
         val list = listOf("aa", "b", "bb", "a")
 
