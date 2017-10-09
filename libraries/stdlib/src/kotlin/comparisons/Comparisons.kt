@@ -92,6 +92,8 @@ public fun <T : Comparable<*>> compareValues(a: T?, b: T?): Int {
  * The functions are called sequentially, receive the given values `a` and `b` and return [Comparable]
  * objects. As soon as the [Comparable] instances returned by a function for `a` and `b` values do not
  * compare as equal, the result of that comparison is returned from the [Comparator].
+ *
+ * @sample samples.comparisons.ComparisonsTest.compareByWithSelectors
  */
 public fun <T> compareBy(vararg selectors: (T) -> Comparable<*>?): Comparator<T> {
     require(selectors.size > 0)
@@ -102,6 +104,8 @@ public fun <T> compareBy(vararg selectors: (T) -> Comparable<*>?): Comparator<T>
 
 /**
  * Creates a comparator using the function to transform value to a [Comparable] instance for comparison.
+ *
+ * @sample samples.comparisons.ComparisonsTest.compareByWithSingleSelector
  */
 @kotlin.internal.InlineOnly
 public inline fun <T> compareBy(crossinline selector: (T) -> Comparable<*>?): Comparator<T> =
@@ -110,6 +114,8 @@ public inline fun <T> compareBy(crossinline selector: (T) -> Comparable<*>?): Co
 /**
  * Creates a comparator using the [selector] function to transform values being compared and then applying
  * the specified [comparator] to compare transformed values.
+ *
+ * @sample samples.comparisons.ComparisonsTest.compareByWithComparator
  */
 @kotlin.internal.InlineOnly
 public inline fun <T, K> compareBy(comparator: Comparator<in K>, crossinline selector: (T) -> K): Comparator<T> =
@@ -117,6 +123,8 @@ public inline fun <T, K> compareBy(comparator: Comparator<in K>, crossinline sel
 
 /**
  * Creates a descending comparator using the function to transform value to a [Comparable] instance for comparison.
+ *
+ * @sample samples.comparisons.ComparisonsTest.compareByDescendingWithSingleSelector
  */
 @kotlin.internal.InlineOnly
 public inline fun <T> compareByDescending(crossinline selector: (T) -> Comparable<*>?): Comparator<T> =
@@ -127,6 +135,8 @@ public inline fun <T> compareByDescending(crossinline selector: (T) -> Comparabl
  * the specified [comparator] to compare transformed values.
  *
  * Note that an order of [comparator] is reversed by this wrapper.
+ *
+ * @sample samples.comparisons.ComparisonsTest.compareByDescendingWithComparator
  */
 @kotlin.internal.InlineOnly
 public inline fun <T, K> compareByDescending(comparator: Comparator<in K>, crossinline selector: (T) -> K): Comparator<T> =

@@ -55,6 +55,55 @@ class ComparisonsTest {
         assertEquals(listOf(1, 100, 2, 20), sorted)
     }
 
+    @Sample
+    fun compareByWithSingleSelector() {
+        val list = listOf("aa", "b", "bb", "a")
+
+        val sorted = list.sortedWith(compareBy { it.length })
+
+        assertEquals(listOf("b", "a", "aa", "bb"), sorted)
+    }
+
+    @Sample
+    fun compareByWithSelectors() {
+        val list = listOf("aa", "b", "bb", "a")
+
+        val sorted = list.sortedWith(compareBy(
+                { s: String -> s.length },
+                { s: String -> s }
+        ))
+
+        assertEquals(listOf("a", "b", "aa", "bb"), sorted)
+    }
+
+    @Sample
+    fun compareByWithComparator() {
+        val list = listOf(1, 20, 2, 100)
+
+        val sorted = list.sortedWith(
+                compareBy(naturalOrder<String>()) { v -> v.toString() }
+        )
+
+        assertEquals(listOf(1, 100, 2, 20), sorted)
+    }
+
+    @Sample
+    fun compareByDescendingWithSingleSelector() {
+        val list = listOf("aa", "b", "bb", "a")
+
+        val sorted = list.sortedWith(compareByDescending { it.length })
+
+        assertEquals(listOf("aa", "bb", "b", "a"), sorted)
+    }
+
+    @Sample
+    fun compareByDescendingWithComparator() {
+        val list = listOf("aa", "b", "bb", "a")
+
+        val sorted = list.sortedWith(compareByDescending(naturalOrder<Int>()) { it.length })
+
+        assertEquals(listOf("aa", "bb", "b", "a"), sorted)
+    }
 
     @Sample
     fun sampleNullsFirst() {
