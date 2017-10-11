@@ -22,37 +22,50 @@ import kotlin.test.*
 class ComparisonsTest {
     @Sample
     fun compareValuesByWithSingleSelector() {
-        val list = listOf("aa", "b", "bb", "a")
+        val list = listOf("aa", "b", "", "bb", "a")
 
         val sorted = list.sortedWith(Comparator { a, b ->
-            compareValuesBy(a, b) { it.length }
+            when {
+                a == b -> 0
+                a == "" -> 1
+                b == "" -> -1
+                else -> compareValuesBy(a, b) { it.length }
+            }
         })
 
-        assertEquals(listOf("b", "a", "aa", "bb"), sorted)
+        assertEquals(listOf("b", "a", "aa", "bb", ""), sorted)
     }
 
     @Sample
     fun compareValuesByWithSelectors() {
-        val list = listOf("aa", "b", "bb", "a")
+        val list = listOf("aa", "b", "", "bb", "a")
 
         val sorted = list.sortedWith(Comparator { a, b ->
-            val lengthSelector = { s: String -> s.length }
-            val sourceSelector = { s: String -> s }
-            compareValuesBy(a, b, lengthSelector, sourceSelector)
+            when {
+                a == b -> 0
+                a == "" -> 1
+                b == "" -> -1
+                else -> compareValuesBy(a, b, { it.length }, { it })
+            }
         })
 
-        assertEquals(listOf("a", "b", "aa", "bb"), sorted)
+        assertEquals(listOf("a", "b", "aa", "bb", ""), sorted)
     }
 
     @Sample
     fun compareValuesByWithComparator() {
-        val list = listOf(1, 20, 2, 100)
+        val list = listOf(1, 20, 0, 2, 100)
 
         val sorted = list.sortedWith(Comparator { a, b ->
-            compareValuesBy(a, b, naturalOrder(), { v -> v.toString() })
+            when {
+                a == b -> 0
+                a == 0 -> 1
+                b == 0 -> -1
+                else -> compareValuesBy(a, b, naturalOrder(), { v -> v.toString() })
+            }
         })
 
-        assertEquals(listOf(1, 100, 2, 20), sorted)
+        assertEquals(listOf(1, 100, 2, 20, 0), sorted)
     }
 
     @Sample
@@ -80,8 +93,8 @@ class ComparisonsTest {
         val list = listOf("aa", "b", "bb", "a")
 
         val sorted = list.sortedWith(compareBy(
-                { s: String -> s.length },
-                { s: String -> s }
+                { it.length },
+                { it }
         ))
 
         assertEquals(listOf("a", "b", "aa", "bb"), sorted)
@@ -147,18 +160,6 @@ class ComparisonsTest {
         val sorted = map.entries.sortedWith(
                 compareBy<Map.Entry<String, Int>> { it.value }
                         .thenByDescending { it.key })
-                .map { it.key }
-
-        assertEquals(listOf("d", "c", "a", "b"), sorted)
-    }
-
-    @Sample
-    fun sampleThenByDescendingWithComparator() {
-        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
-
-        val sorted = map.entries.sortedWith(
-                compareBy<Map.Entry<String, Int>> { it.value }
-                        .thenByDescending(naturalOrder()) { it.key })
                 .map { it.key }
 
         assertEquals(listOf("d", "c", "a", "b"), sorted)
