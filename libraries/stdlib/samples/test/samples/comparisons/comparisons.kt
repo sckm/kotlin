@@ -22,61 +22,42 @@ import kotlin.test.*
 class Comparisons {
     @Sample
     fun compareValuesByWithSingleSelector() {
-        val list = listOf("aa", "b", "", "bb", "a")
+        fun compareLength(a: String, b: String): Int =
+                compareValuesBy(a, b) { it.length }
 
-        val sorted = list.sortedWith(Comparator { a, b ->
-            when {
-                a == b -> 0
-                a == "" -> 1
-                b == "" -> -1
-                else -> compareValuesBy(a, b) { it.length }
-            }
-        })
-
-        assertPrints(sorted, "[b, a, aa, bb, ]")
+        assertTrue(compareLength("a", "b") == 0)
+        assertTrue(compareLength("bb", "a") > 0)
+        assertTrue(compareLength("a", "bb") < 0)
     }
 
     @Sample
     fun compareValuesByWithSelectors() {
-        val list = listOf("aa", "b", "", "bb", "a")
+        fun compareLengthThenString(a: String, b: String): Int =
+                compareValuesBy(a, b, { it.length }, { it })
 
-        val sorted = list.sortedWith(Comparator { a, b ->
-            when {
-                a == b -> 0
-                a == "" -> 1
-                b == "" -> -1
-                else -> compareValuesBy(a, b, { it.length }, { it })
-            }
-        })
+        assertTrue(compareLengthThenString("b", "aa") < 0)
 
-        assertPrints(sorted, "[a, b, aa, bb, ]")
+        // same length
+        assertTrue(compareLengthThenString("b", "a") > 0)
+        assertTrue(compareLengthThenString("a", "a") == 0)
     }
 
     @Sample
     fun compareValuesByWithComparator() {
-        val list = listOf(1, 20, 0, 2, 100)
+        fun compareInsensitiveOrder(a: Char, b: Char): Int =
+                compareValuesBy(a, b, String.CASE_INSENSITIVE_ORDER, { c -> c.toString() })
 
-        val sorted = list.sortedWith(Comparator { a, b ->
-            when {
-                a == b -> 0
-                a == 0 -> -1
-                b == 0 -> 1
-                else -> compareValuesBy(a, b, reverseOrder(), { v -> v.toString() })
-            }
-        })
+        assertTrue(compareInsensitiveOrder('a', 'a') == 0)
+        assertTrue(compareInsensitiveOrder('a', 'A') == 0)
 
-        assertPrints(sorted, "[0, 20, 2, 100, 1]")
+        assertTrue(compareInsensitiveOrder('a', 'b') < 0)
+        assertTrue(compareInsensitiveOrder('A', 'b') < 0)
     }
 
     @Sample
     fun compareValues() {
-        val list = listOf(4, null, 1, -2, 3)
-
-        val sorted = list.sortedWith(
-                Comparator { a, b -> compareValues(a, b) }
-        )
-
-        assertPrints(sorted, "[null, -2, 1, 3, 4]")
+        assertTrue(compareValues(null, 1) < 0)
+        assertTrue(compareValues(1, 2) < 0)
     }
 
     @Sample
@@ -102,13 +83,13 @@ class Comparisons {
 
     @Sample
     fun compareByWithComparator() {
-        val list = listOf(1, 20, 2, 100)
+        val list = listOf('B', 'a', 'A', 'b')
 
         val sorted = list.sortedWith(
-                compareBy(naturalOrder<String>()) { v -> v.toString() }
+                compareBy(String.CASE_INSENSITIVE_ORDER) { v -> v.toString() }
         )
 
-        assertPrints(sorted, "[1, 100, 2, 20]")
+        assertPrints(sorted, "[a, A, B, b]")
     }
 
     @Sample
@@ -122,11 +103,13 @@ class Comparisons {
 
     @Sample
     fun compareByDescendingWithComparator() {
-        val list = listOf("aa", "b", "bb", "a")
+        val list = listOf('B', 'a', 'A', 'b')
 
-        val sorted = list.sortedWith(compareByDescending(naturalOrder<Int>()) { it.length })
+        val sorted = list.sortedWith(
+                compareByDescending(String.CASE_INSENSITIVE_ORDER) { v -> v.toString() }
+        )
 
-        assertPrints(sorted, "[aa, bb, b, a]")
+        assertPrints(sorted, "[B, b, a, A]")
     }
 
     @Sample
