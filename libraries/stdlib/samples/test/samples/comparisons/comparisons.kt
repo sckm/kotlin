@@ -33,7 +33,7 @@ class Comparisons {
             }
         })
 
-        assertEquals(listOf("b", "a", "aa", "bb", ""), sorted)
+        assertPrints(sorted, "[b, a, aa, bb, ]")
     }
 
     @Sample
@@ -49,7 +49,7 @@ class Comparisons {
             }
         })
 
-        assertEquals(listOf("a", "b", "aa", "bb", ""), sorted)
+        assertPrints(sorted, "[a, b, aa, bb, ]")
     }
 
     @Sample
@@ -59,13 +59,13 @@ class Comparisons {
         val sorted = list.sortedWith(Comparator { a, b ->
             when {
                 a == b -> 0
-                a == 0 -> 1
-                b == 0 -> -1
-                else -> compareValuesBy(a, b, naturalOrder<String>(), { v -> v.toString() })
+                a == 0 -> -1
+                b == 0 -> 1
+                else -> compareValuesBy(a, b, reverseOrder(), { v -> v.toString() })
             }
         })
 
-        assertEquals(listOf(1, 100, 2, 20, 0), sorted)
+        assertPrints(sorted, "[0, 20, 2, 100, 1]")
     }
 
     @Sample
@@ -76,7 +76,7 @@ class Comparisons {
                 Comparator { a, b -> compareValues(a, b) }
         )
 
-        assertEquals(listOf(null, -2, 1, 3, 4), sorted)
+        assertPrints(sorted, "[null, -2, 1, 3, 4]")
     }
 
     @Sample
@@ -85,7 +85,7 @@ class Comparisons {
 
         val sorted = list.sortedWith(compareBy { it.length })
 
-        assertEquals(listOf("b", "a", "aa", "bb"), sorted)
+        assertPrints(sorted, "[b, a, aa, bb]")
     }
 
     @Sample
@@ -97,7 +97,7 @@ class Comparisons {
                 { it }
         ))
 
-        assertEquals(listOf("a", "b", "aa", "bb"), sorted)
+        assertPrints(sorted, "[a, b, aa, bb]")
     }
 
     @Sample
@@ -108,7 +108,7 @@ class Comparisons {
                 compareBy(naturalOrder<String>()) { v -> v.toString() }
         )
 
-        assertEquals(listOf(1, 100, 2, 20), sorted)
+        assertPrints(sorted, "[1, 100, 2, 20]")
     }
 
     @Sample
@@ -117,7 +117,7 @@ class Comparisons {
 
         val sorted = list.sortedWith(compareByDescending { it.length })
 
-        assertEquals(listOf("aa", "bb", "b", "a"), sorted)
+        assertPrints(sorted, "[aa, bb, b, a]")
     }
 
     @Sample
@@ -126,7 +126,7 @@ class Comparisons {
 
         val sorted = list.sortedWith(compareByDescending(naturalOrder<Int>()) { it.length })
 
-        assertEquals(listOf("aa", "bb", "b", "a"), sorted)
+        assertPrints(sorted, "[aa, bb, b, a]")
     }
 
     @Sample
@@ -137,7 +137,7 @@ class Comparisons {
 
         val sorted = list.sortedWith(comparator)
 
-        assertEquals(listOf("a", "b", "aa", "bb"), sorted)
+        assertPrints(sorted, "[a, b, aa, bb]")
     }
 
     @Sample
@@ -145,11 +145,11 @@ class Comparisons {
         val list = listOf("aa", "b", "bb", "a")
 
         val comparator = compareBy<String> { it.length }
-                .thenBy(reverseOrder<String>()) { it }
+                .thenBy(reverseOrder()) { it }
 
         val sorted = list.sortedWith(comparator)
 
-        assertEquals(listOf("b", "a", "bb", "aa"), sorted)
+        assertPrints(sorted, "[b, a, bb, aa]")
     }
 
     @Sample
@@ -163,7 +163,7 @@ class Comparisons {
                 .sortedWith(comparator)
                 .map { it.key }
 
-        assertEquals(listOf("d", "c", "a", "b"), sorted)
+        assertPrints(sorted, "[d, c, a, b]")
     }
 
     @Sample
@@ -171,13 +171,13 @@ class Comparisons {
         val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
 
         val comparator = compareBy<Map.Entry<String, Int>> { it.value }
-                .thenByDescending(naturalOrder<String>()) { it.key }
+                .thenByDescending(naturalOrder()) { it.key }
 
         val sorted = map.entries
                 .sortedWith(comparator)
                 .map { it.key }
 
-        assertEquals(listOf("d", "c", "a", "b"), sorted)
+        assertPrints(sorted, "[d, c, a, b]")
     }
 
     @Sample
@@ -191,7 +191,7 @@ class Comparisons {
                 .sortedWith(comparator)
                 .map { it.key }
 
-        assertEquals(listOf("d", "a", "c", "b"), sorted)
+        assertPrints(sorted, "[d, a, c, b]")
     }
 
     @Sample
@@ -205,7 +205,7 @@ class Comparisons {
                 .sortedWith(comparator)
                 .map { it.key }
 
-        assertEquals(listOf("d", "a", "c", "b"), sorted)
+        assertPrints(sorted, "[d, a, c, b]")
     }
 
     @Sample
@@ -219,7 +219,7 @@ class Comparisons {
                 .sortedWith(comparator)
                 .map { it.key }
 
-        assertEquals(listOf("d", "c", "a", "b"), sorted)
+        assertPrints(sorted, "[d, c, a, b]")
     }
 
     @Sample
@@ -228,7 +228,7 @@ class Comparisons {
 
         val sortedList = list.sortedWith(nullsFirst())
 
-        assertEquals(listOf(null, -1, 1, 4), sortedList)
+        assertPrints(sortedList, "[null, -1, 1, 4]")
     }
 
     @Sample
@@ -241,7 +241,7 @@ class Comparisons {
         }
         val sortedList = list.sortedWith(nullsFirst(evenFirstComparator))
 
-        assertEquals(listOf(null, 4, -2, 1, 3), sortedList)
+        assertPrints(sortedList, "[null, 4, -2, 1, 3]")
     }
 
     @Sample
@@ -250,7 +250,7 @@ class Comparisons {
 
         val sortedList = list.sortedWith(nullsLast())
 
-        assertEquals(listOf(-1, 1, 4, null), sortedList)
+        assertPrints(sortedList, "[-1, 1, 4, null]")
     }
 
     @Sample
@@ -263,25 +263,25 @@ class Comparisons {
         }
         val sortedList = list.sortedWith(nullsLast(evenFirstComparator))
 
-        assertEquals(listOf(4, -2, 1, 3, null), sortedList)
+        assertPrints(sortedList, "[4, -2, 1, 3, null]")
     }
 
     @Sample
     fun naturalOrderComparator() {
         val list = listOf(4, 1, -2, 1, 3)
 
-        val sortedList = list.sortedWith(naturalOrder<Int>())
+        val sortedList = list.sortedWith(naturalOrder())
 
-        assertEquals(listOf(-2, 1, 1, 3, 4), sortedList)
+        assertPrints(sortedList, "[-2, 1, 1, 3, 4]")
     }
 
     @Sample
     fun reverseOrderComparator() {
         val list = listOf(4, 1, -2, 1, 3)
 
-        val sortedList = list.sortedWith(reverseOrder<Int>())
+        val sortedList = list.sortedWith(reverseOrder())
 
-        assertEquals(listOf(4, 3, 1, 1, -2), sortedList)
+        assertPrints(sortedList, "[4, 3, 1, 1, -2]")
     }
 
     @Sample
@@ -290,6 +290,6 @@ class Comparisons {
 
         val sortedList = list.sortedWith(naturalOrder<Int>().reversed())
 
-        assertEquals(listOf(4, 3, 1, 1, -2), sortedList)
+        assertPrints(sortedList, "[4, 3, 1, 1, -2]")
     }
 }
