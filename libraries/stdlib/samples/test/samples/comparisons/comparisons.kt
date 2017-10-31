@@ -16,8 +16,9 @@
 
 package samples.comparisons
 
-import samples.*
-import kotlin.test.*
+import samples.Sample
+import samples.assertPrints
+import kotlin.test.assertTrue
 
 class Comparisons {
     @Sample
@@ -116,79 +117,67 @@ class Comparisons {
     fun thenBy() {
         val list = listOf("aa", "b", "bb", "a")
 
-        val comparator = compareBy<String> { it.length }.thenBy { it }
+        val lengthComparator = compareBy<String> { it.length }
+        assertPrints(list.sortedWith(lengthComparator), "[b, a, aa, bb]")
 
-        val sorted = list.sortedWith(comparator)
-
-        assertPrints(sorted, "[a, b, aa, bb]")
+        val lengthThenString = lengthComparator.thenBy { it }
+        assertPrints(list.sortedWith(lengthThenString), "[a, b, aa, bb]")
     }
 
     @Sample
     fun thenByWithComparator() {
-        val list = listOf("aa", "b", "bb", "a")
+        val list = listOf("A", "aa", "b", "bb", "a")
 
-        val comparator = compareBy<String> { it.length }
-                .thenBy(reverseOrder()) { it }
+        val lengthComparator = compareBy<String> { it.length }
+        assertPrints(list.sortedWith(lengthComparator), "[A, b, a, aa, bb]")
 
-        val sorted = list.sortedWith(comparator)
-
-        assertPrints(sorted, "[b, a, bb, aa]")
+        val lengthThenCaseInsensitive = lengthComparator
+                .thenBy(String.CASE_INSENSITIVE_ORDER) { it }
+        assertPrints(list.sortedWith(lengthThenCaseInsensitive), "[A, a, b, aa, bb]")
     }
 
     @Sample
     fun thenByDescending() {
-        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
+        val list = listOf("aa", "b", "bb", "a")
 
-        val comparator = compareBy<Map.Entry<String, Int>> { it.value }
-                .thenByDescending { it.key }
+        val lengthComparator = compareBy<String> { it.length }
+        assertPrints(list.sortedWith(lengthComparator), "[b, a, aa, bb]")
 
-        val sorted = map.entries
-                .sortedWith(comparator)
-                .map { it.key }
-
-        assertPrints(sorted, "[d, c, a, b]")
+        val lengthThenStringDesc = lengthComparator.thenByDescending { it }
+        assertPrints(list.sortedWith(lengthThenStringDesc), "[b, a, bb, aa]")
     }
 
     @Sample
     fun thenByDescendingWithComparator() {
-        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
+        val list = listOf("A", "aa", "b", "bb", "a")
 
-        val comparator = compareBy<Map.Entry<String, Int>> { it.value }
-                .thenByDescending(naturalOrder()) { it.key }
+        val lengthComparator = compareBy<String> { it.length }
+        assertPrints(list.sortedWith(lengthComparator), "[A, b, a, aa, bb]")
 
-        val sorted = map.entries
-                .sortedWith(comparator)
-                .map { it.key }
-
-        assertPrints(sorted, "[d, c, a, b]")
+        val lengthThenCaseInsensitive = lengthComparator
+                .thenByDescending(String.CASE_INSENSITIVE_ORDER) { it }
+        assertPrints(list.sortedWith(lengthThenCaseInsensitive), "[b, A, a, bb, aa]")
     }
 
     @Sample
     fun thenComparator() {
-        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
-
         val comparator = compareBy<Map.Entry<String, Int>> { it.value }
                 .thenComparator({ a, b -> compareValues(a.key, b.key) })
+        val sortedSet = sortedSetOf(comparator, *arrayOf("a" to 1, "b" to 2, "c" to 1, "d" to 0))
 
-        val sorted = map.entries
-                .sortedWith(comparator)
-                .map { it.key }
-
-        assertPrints(sorted, "[d, a, c, b]")
+        assertPrints(sortedSet, "[d=0, a=1, c=1, b=2]")
     }
 
     @Sample
     fun then() {
-        val map = mapOf("a" to 1, "b" to 2, "c" to 1, "d" to 0)
+        val list = listOf("aa", "b", "bb", "a")
 
-        val comparator = compareBy<Map.Entry<String, Int>> { it.value }
-                .then(compareBy { it.key })
+        val lengthThenNaturalComparator = compareBy<String> { it.length }
+                .then(naturalOrder<String>())
 
-        val sorted = map.entries
-                .sortedWith(comparator)
-                .map { it.key }
+        val sorted = list.sortedWith(lengthThenNaturalComparator)
 
-        assertPrints(sorted, "[d, a, c, b]")
+        assertPrints(sorted, "[a, b, aa, bb]")
     }
 
     @Sample
